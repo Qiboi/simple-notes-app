@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class NoteItem extends React.Component {
   render() {
     const { note, onDelete, onArchive } = this.props;

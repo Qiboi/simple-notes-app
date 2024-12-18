@@ -2,13 +2,13 @@ import React from "react";
 import NoteForm from "./NoteForm";
 import NoteList from "./NoteList";
 import SearchBar from "./SearchBar";
-import { getData } from "../utils/data";
+import { getInitialData } from "../utils";
 
 class NoteApp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            notes: getData(),
+            notes: getInitialData(),
             searchKeyword: '',
         };
 
