@@ -4,6 +4,7 @@ import SearchBar from "../components/SearchBar";
 import NoteList from "../components/NoteList";
 import { getActiveNotes } from "../utils/local-data";
 import { useSearchParams } from "react-router-dom";
+import PropTypes from "prop-types";
 
 function NoteHomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -60,6 +61,11 @@ class NoteHomePageChild extends React.Component {
             </div>
         );
     }
+}
+
+NoteHomePageChild.propTypes = {
+    defaultKeyword: PropTypes.string,
+    keywordChange: PropTypes.func.isRequired
 }
 
 export default NoteHomePage;

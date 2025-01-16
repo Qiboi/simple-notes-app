@@ -107,6 +107,7 @@ NoteForm.propTypes = {
 };
 
 NoteFormChild.propTypes = {
+    addNote: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
 };
 

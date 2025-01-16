@@ -4,6 +4,7 @@ import SearchBar from "../components/SearchBar";
 import NoteList from "../components/NoteList";
 import { getArchivedNotes } from "../utils/local-data";
 import { useSearchParams } from "react-router-dom";
+import PropTypes from "prop-types";
 
 function NoteArchivePage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -60,6 +61,11 @@ class NoteArchivePageChild extends React.Component {
             </div>
         );
     }
+}
+
+NoteArchivePageChild.propTypes = {
+    defaultKeyword: PropTypes.string,
+    keywordChange: PropTypes.func.isRequired
 }
 
 export default NoteArchivePage;
