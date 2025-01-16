@@ -1,8 +1,13 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import NoteApp from './components/NoteApp';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
 import './styles/index.css';
 
 const root = createRoot(document.getElementById('root'));
-root.render(<NoteApp />);
+root.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
