@@ -1,71 +1,86 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
+import { useSearchParams } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import SearchBar from "../components/SearchBar";
 import NoteList from "../components/NoteList";
-import { getActiveNotes } from "../utils/local-data";
-import { useSearchParams } from "react-router-dom";
-import PropTypes from "prop-types";
+import { getActiveNotes } from "../utils/network-data";
+import { LocaleContext } from "../contexts/LocaleContext";
 
-function NoteHomePage() {
+function NoteHomePage({ logout }) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const keyword = searchParams.get("keyword");
+    const initialKeyword = searchParams.get("keyword") || "";
 
-    function changeSearchParams(keyword) {
-        setSearchParams({ keyword });
-    }
+    const [notes, setNotes] = useState([]);
+    const [keyword, setKeyword] = useState(initialKeyword);
+    const [loading, setLoading] = useState(true);
 
-    return <NoteHomePageChild defaultKeyword={keyword} keywordChange={changeSearchParams} />;
-}
+    const { locale } = useContext(LocaleContext);
 
-class NoteHomePageChild extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            notes: getActiveNotes(),
-            keyword: props.defaultKeyword || "",
-        };
+    useEffect(() => {
+        fetchNotes();
+    }, []);
 
-        this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
-    }
+    useEffect(() => {
+        fetchNotes();
+    }, [keyword]);
 
-    onKeywordChangeHandler(keyword) {
-        this.setState(() => {
-            return {
-                keyword,
-            };
-        });
+    const fetchNotes = async () => {
+        setLoading(true);
+        try {
+            const { data } = await getActiveNotes();
+            setNotes(data);
+        } catch (error) {
+            console.error("Failed to fetch notes:", error);
+        }
+        setLoading(false);
+    };
 
-        this.props.keywordChange(keyword);
-    }
+    const handleKeywordChange = (newKeyword) => {
+        setKeyword(newKeyword);
+        setSearchParams(newKeyword ? { keyword: newKeyword } : {});
+    };
 
-    render() {
-        const filteredNotes = this.state.notes.filter((note) => {
-            return note.title.toLowerCase().includes(
-                this.state.keyword.toLowerCase()
-            );
-        });
+    const filteredNotes = notes.filter((note) =>
+        note.title.toLowerCase().includes(keyword.toLowerCase())
+    );
 
-        return (
-            <div>
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="text-3xl font-extrabold text-center mb-8">Aplikasi Catatan</h1>
-                </div>
-                <div className="p-6">
-                    <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-bold text-gray-100">Catatan Aktif</h1>
-                        <Navigation currentPage="home" />
-                    </div>
-                    <SearchBar keyword={this.state.keyword} keywordChange={this.onKeywordChangeHandler} />
-                    <NoteList notes={filteredNotes} />
-                </div>
+    return (
+        <div>
+            <div className="max-w-4xl mx-auto">
+                <h1 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100 mb-8">
+                    {locale === "id" ? "Aplikasi Catatan" : "Notes App"}
+                </h1>
             </div>
-        );
-    }
+            <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {locale === "id" ? "Catatan Aktif" : "Active Notes"}
+                    </h2>
+                    <Navigation currentPage="home" logout={logout} />
+                </div>
+                <SearchBar keyword={keyword} keywordChange={handleKeywordChange} />
+                
+                {loading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <NoteList notes={filteredNotes} />
+                )}
+            </div>
+        </div>
+    );
 }
 
-NoteHomePageChild.propTypes = {
-    defaultKeyword: PropTypes.string,
-    keywordChange: PropTypes.func.isRequired
+function LoadingIndicator() {
+    return (
+        <div className="flex justify-center items-center py-6">
+            <div className="w-16 h-16 border-t-4 border-violet-500 border-solid rounded-full animate-spin"></div>
+        </div>
+    );
 }
+
+NoteHomePage.propTypes = {
+    logout: PropTypes.func.isRequired,
+};
 
 export default NoteHomePage;
