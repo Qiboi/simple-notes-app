@@ -7,7 +7,7 @@ import NoteList from "../components/NoteList";
 import { getActiveNotes } from "../utils/network-data";
 import { LocaleContext } from "../contexts/LocaleContext";
 
-function NoteHomePage({ logout }) {
+function NoteHomePage({ logout, name }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const initialKeyword = searchParams.get("keyword") || "";
 
@@ -57,7 +57,7 @@ function NoteHomePage({ logout }) {
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         {locale === "id" ? "Catatan Aktif" : "Active Notes"}
                     </h2>
-                    <Navigation currentPage="home" logout={logout} />
+                    <Navigation currentPage="home" logout={logout} name={name} />
                 </div>
                 <SearchBar keyword={keyword} keywordChange={handleKeywordChange} />
                 
@@ -81,6 +81,7 @@ function LoadingIndicator() {
 
 NoteHomePage.propTypes = {
     logout: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired
 };
 
 export default NoteHomePage;

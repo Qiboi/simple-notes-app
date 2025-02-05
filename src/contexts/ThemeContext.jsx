@@ -8,7 +8,6 @@ export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(storedTheme);
 
     useEffect(() => {
-        console.log("Theme changed to:", theme);
         if (theme === "dark") {
             document.documentElement.classList.add("dark");
         } else {

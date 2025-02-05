@@ -87,12 +87,12 @@ function App() {
                 <Routes>
                     <Route
                         path="/simple-notes-app/"
-                        element={<NoteHomePage logout={onLogout} />}
+                        element={<NoteHomePage logout={onLogout} name={authedUser.name} />}
                     />
                     <Route path="/simple-notes-app/add" element={<NoteAddPage />} />
                     <Route
                         path="/simple-notes-app/archive"
-                        element={<NoteArchivedPage logout={onLogout} />}
+                        element={<NoteArchivedPage logout={onLogout} name={authedUser.name} />}
                     />
                     <Route
                         path="/simple-notes-app/notes/:id"

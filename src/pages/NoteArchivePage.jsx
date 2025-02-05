@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { LocaleContext } from "../contexts/LocaleContext";
 
-function NoteArchivePage({ logout }) {
+function NoteArchivePage({ logout, name }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const initialKeyword = searchParams.get("keyword") || "";
 
@@ -58,7 +58,7 @@ function NoteArchivePage({ logout }) {
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         {locale === "id" ? "Catatan Arsip" : "Archive Notes"}
                     </h1>
-                    <Navigation currentPage="archive" logout={logout} />
+                    <Navigation currentPage="archive" logout={logout} name={name} />
                 </div>
                 <SearchBar keyword={keyword} keywordChange={handleKeywordChange} />
 
@@ -77,6 +77,7 @@ function NoteArchivePage({ logout }) {
 
 NoteArchivePage.propTypes = {
     logout: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired
 };
 
 export default NoteArchivePage;
