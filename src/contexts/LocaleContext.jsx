@@ -1,22 +1,21 @@
-import React, { createContext, useState, useEffect } from "react";
-
+import React, { createContext, useState, useEffect, useMemo } from "react";
+import PropTypes from "prop-types";
 
 export const LocaleProvider = ({ children }) => {
-  // Ambil bahasa dari localStorage, default ke 'id' (Indonesia)
   const [locale, setLocale] = useState(localStorage.getItem("locale") || "id");
 
-  // Simpan perubahan bahasa ke localStorage
   useEffect(() => {
     localStorage.setItem("locale", locale);
   }, [locale]);
-  
-  // Fungsi untuk mengubah bahasa
+
   const toggleLocale = () => {
     setLocale((prevLocale) => (prevLocale === "id" ? "en" : "id"));
   };
-  
+
+  const contextValue = useMemo(() => ({ locale, toggleLocale }), [locale]);
+
   return (
-    <LocaleContext.Provider value={{ locale, toggleLocale }}>
+    <LocaleContext.Provider value={contextValue}>
       {children}
     </LocaleContext.Provider>
   );
